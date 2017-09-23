@@ -20,4 +20,13 @@ class ProductController extends Controller
 
         return $prod;
     }
+
+    public function destroy($id)
+    {
+        return Product::destroy($id);
+    }
+
+    // public function index()
+    // public function show($id)
+    // public function update($id)
 }

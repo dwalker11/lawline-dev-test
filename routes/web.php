@@ -16,3 +16,8 @@ $router->get('/', function () use ($router) {
 });
 
 $router->post('/products', 'ProductController@store');
+$router->delete('/products/{id}', 'ProductController@destroy');
+
+// $router->get('/products', 'ProductController@index');
+// $router->get('/products/{id}', 'ProductController@show');
+// $router->put('/products/{id}', 'ProductController@update');

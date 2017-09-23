@@ -31,7 +31,11 @@ class ProductTest extends TestCase
     */
     public function testDeleteAProduct()
     {
-        $this->markTestSkipped();
+        $prod = $this->generateProducts()->first();
+        $this->seeInDatabase('products', ['name' => $prod->name]);
+
+        $response = $this->call('DELETE', "/products/{$prod->id}");
+        $this->notSeeInDatabase('products', ['name' => $prod->name]);
     }
 
     /**
@@ -62,5 +66,15 @@ class ProductTest extends TestCase
     public function testGetAllProducts()
     {
         $this->markTestSkipped();
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
+    protected function generateProducts($num = 1)
+    {
+        return factory(App\Product::class, $num)->create();
     }
 }

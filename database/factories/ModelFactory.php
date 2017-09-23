@@ -17,3 +17,15 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
     ];
 });
+
+$factory->define(App\Product::class, function (Faker\Generator $faker) {
+    $products = ['iPhoneX', 'Toyota Prius', 'MacBook Pro', 'iPad Pro', 'Xbox X'];
+
+    return [
+        'name' => $products[array_rand($products)],
+        'description' => $faker->text,
+        'price' => $faker->randomFloat(2, 0, 999.99),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s'),
+    ];
+});
