@@ -12,6 +12,40 @@ class ProductTest extends TestCase
     *
     * @return void
     */
+    public function testGetAllProducts()
+    {
+        $prod = $this->generateProducts(3);
+
+        $res = $this->json('GET', "/products")
+            ->seeJson([
+                'name' => $prod->get(0)->name,
+                'name' => $prod->get(1)->name,
+                'name' => $prod->get(2)->name,
+            ]);
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
+    public function testGetAProduct()
+    {
+        $prod = $this->generateProducts()->first();
+
+        $this->json('GET', "/products/{$prod->id}")
+            ->seeJson([
+                'name' => $prod->name,
+                'description' => $prod->description,
+                'price' => $prod->price,
+            ]);
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
     public function testCreateAProduct()
     {
         $params = [
@@ -20,7 +54,7 @@ class ProductTest extends TestCase
             'price' => 999.99,
         ];
 
-        $response = $this->call('POST', '/products', $params);
+        $response = $this->json('POST', '/products', $params);
         $this->seeInDatabase('products', ['name' => $params['name']]);
     }
 
@@ -33,8 +67,7 @@ class ProductTest extends TestCase
     {
         $prod = $this->generateProducts()->first();
         $this->seeInDatabase('products', ['name' => $prod->name]);
-
-        $response = $this->call('DELETE', "/products/{$prod->id}");
+        $this->json('DELETE', "/products/{$prod->id}");
         $this->notSeeInDatabase('products', ['name' => $prod->name]);
     }
 
@@ -44,26 +77,6 @@ class ProductTest extends TestCase
     * @return void
     */
     public function testUpdateAProduct()
-    {
-        $this->markTestSkipped();
-    }
-
-    /**
-    * A basic test example.
-    *
-    * @return void
-    */
-    public function testGetAProduct()
-    {
-        $this->markTestSkipped();
-    }
-
-    /**
-    * A basic test example.
-    *
-    * @return void
-    */
-    public function testGetAllProducts()
     {
         $this->markTestSkipped();
     }
