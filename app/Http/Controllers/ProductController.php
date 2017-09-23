@@ -17,7 +17,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
         return response()->json($product);
     }
 
@@ -42,7 +42,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $params = $request->only(['name', 'description', 'price']);
-        $prod = Product::find($id)->update($params);
+        $prod = Product::findOrFail($id)->update($params);
 
         return response()->json(['updated' => 'success']);
     }
@@ -55,14 +55,14 @@ class ProductController extends Controller
 
     public function showUserProducts($user)
     {
-        $user = User::find($user);
+        $user = User::findOrFail($user);
         return response()->json($user->products);
     }
 
     public function associateUser($id, $user)
     {
-        $product = Product::find($id);
-        $user = User::find($user);
+        $product = Product::findOrFail($id);
+        $user = User::findOrFail($user);
 
         $product->user()->associate($user);
         $product->save();
@@ -72,7 +72,7 @@ class ProductController extends Controller
 
     public function dissociateUser($id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         $product->user()->dissociate();
         $product->save();
@@ -82,7 +82,7 @@ class ProductController extends Controller
 
     public function uploadProductImage(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         if ($request->file('image')->isValid()) {
             $file = $request->file('image');
