@@ -26,6 +26,16 @@ class ProductController extends Controller
         $params = $request->only(['name', 'description', 'price']);
         $prod = Product::create($params);
 
+        if ($request->file('image')->isValid()) {
+            $file = $request->file('image');
+
+            $destinationPath = storage_path('/uploads');
+            $fileName = $product->id."-".$file->getClientOriginalName();
+
+            $file->move($destinationPath, $fileName);
+            $product->image = $destinationPath . DIRECTORY_SEPARATOR . $filename;
+        }
+
         return response()->json(['created' => 'success']);
     }
 
@@ -68,5 +78,24 @@ class ProductController extends Controller
         $product->save();
 
         return response()->json(['dissociate' => 'success']);
+    }
+
+    public function uploadProductImage(Request $request, $id)
+    {
+        $product = Product::find($id);
+
+        if ($request->file('image')->isValid()) {
+            $file = $request->file('image');
+
+            $destinationPath = storage_path('/uploads');
+            $fileName = $product->id."-".$file->getClientOriginalName();
+
+            $file->move($destinationPath, $fileName);
+            $product->image = $destinationPath.DIRECTORY_SEPARATOR.$filename;
+
+            return response()->json(['upload' => 'success']);
+        }
+
+        return response()->json(['upload' => 'failed']);
     }
 }

@@ -163,6 +163,27 @@ class ProductTest extends TestCase
     *
     * @return void
     */
+    public function testUploadAnImageForAProduct()
+    {
+        $this->markTestSkipped();
+
+        // TODO: create a mock image file
+
+        $prod = $this->generateProducts()->first();
+        $filePath = base_path().$product->id."-".$file->getClientOriginalName();
+
+        $response = $this->call('PUT', "/products/{$prod->id}/image");
+        $this->seeInDatabase('products', [
+            'id' => $prod->id,
+            'image' => $filePath,
+        ]);
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
     protected function generateProducts($num = 1)
     {
         return factory(App\Product::class, $num)->create();
