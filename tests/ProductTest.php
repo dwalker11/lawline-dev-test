@@ -7,6 +7,12 @@ class ProductTest extends TestCase
 {
     use DatabaseTransactions;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->app->instance('middleware.disable', true);
+    }
+
     /**
     * A basic test example.
     *
