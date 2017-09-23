@@ -63,12 +63,23 @@ class ProductTest extends TestCase
     *
     * @return void
     */
-    public function testDeleteAProduct()
+    public function testUpdateAProduct()
     {
         $prod = $this->generateProducts()->first();
         $this->seeInDatabase('products', ['name' => $prod->name]);
-        $this->json('DELETE', "/products/{$prod->id}");
-        $this->notSeeInDatabase('products', ['name' => $prod->name]);
+
+        $params = [
+            'name' => 'Google Pixel XL',
+            'description' => 'The best phone on the market',
+            'price' => 699.99,
+        ];
+
+        $response = $this->json('PUT', "/products/{$prod->id}", $params);
+        $this->seeInDatabase('products', [
+            'name' => $params['name'],
+            'description' => $params['description'],
+            'price' => $params['price'],
+        ]);
     }
 
     /**
@@ -76,9 +87,12 @@ class ProductTest extends TestCase
     *
     * @return void
     */
-    public function testUpdateAProduct()
+    public function testDeleteAProduct()
     {
-        $this->markTestSkipped();
+        $prod = $this->generateProducts()->first();
+        $this->seeInDatabase('products', ['name' => $prod->name]);
+        $this->json('DELETE', "/products/{$prod->id}");
+        $this->notSeeInDatabase('products', ['name' => $prod->name]);
     }
 
     /**

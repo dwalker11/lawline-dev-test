@@ -20,13 +20,16 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $params = $request->all();
-        $prod = new Product();
+        $params = $request->only(['name', 'description', 'price']);
+        $prod = Product::create($params);
 
-        $prod->name = $params['name'];
-        $prod->description = $params['description'];
-        $prod->price = $params['price'];
-        $prod->save();
+        return $prod;
+    }
+
+    public function update(Request $request, $id)
+    {
+        $params = $request->only(['name', 'description', 'price']);
+        $prod = Product::find($id)->update($params);
 
         return $prod;
     }
@@ -35,5 +38,4 @@ class ProductController extends Controller
     {
         return Product::destroy($id);
     }
-    // public function update($id)
 }
