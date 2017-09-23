@@ -20,3 +20,6 @@ $router->get('/products/{id}', 'ProductController@show');
 $router->post('/products', 'ProductController@store');
 $router->put('/products/{id}', 'ProductController@update');
 $router->delete('/products/{id}', 'ProductController@destroy');
+$router->get('/products/user/{user}', 'ProductController@showUserProducts');
+$router->put('/products/{id}/user/{user}', 'ProductController@associateUser');
+$router->put('/products/{id}/user', 'ProductController@dissociateUser');

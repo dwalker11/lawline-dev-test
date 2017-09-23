@@ -90,9 +90,66 @@ class ProductTest extends TestCase
     public function testDeleteAProduct()
     {
         $prod = $this->generateProducts()->first();
-        $this->seeInDatabase('products', ['name' => $prod->name]);
+        $this->seeInDatabase('products', ['id' => $prod->id]);
         $this->json('DELETE', "/products/{$prod->id}");
-        $this->notSeeInDatabase('products', ['name' => $prod->name]);
+        $this->notSeeInDatabase('products', ['id' => $prod->id]);
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
+    public function testGetAUsersProducts()
+    {
+        $prod = factory(App\Product::class)->make();
+        $user = $this->generateUsers()->first();
+
+        $user->products()->save($prod);
+
+        $this->json('GET', "/products/user/{$user->id}")
+            ->seeJson([
+                'user_id' => $user->id,
+                'name' => $prod->name,
+                'description' => $prod->description,
+                'price' => $prod->price,
+            ]);
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
+    public function testAssociateAProductToAUser()
+    {
+        $user = $this->generateUsers()->first();
+        $prod = $this->generateProducts()->first();
+
+        $this->json('PUT', "/products/{$prod->id}/user/{$user->id}");
+        $this->seeInDatabase('products', [
+            'id' => $prod->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
+    public function testDissociateAProductForAUser()
+    {
+        $prod = factory(App\Product::class)->make();
+        $user = $this->generateUsers()->first();
+
+        $user->products()->save($prod);
+
+        $this->json('PUT', "/products/{$prod->id}/user");
+        $this->notSeeInDatabase('products', [
+            'id' => $prod->id,
+            'user_id' => $user->id,
+        ]);
     }
 
     /**
@@ -103,5 +160,15 @@ class ProductTest extends TestCase
     protected function generateProducts($num = 1)
     {
         return factory(App\Product::class, $num)->create();
+    }
+
+    /**
+    * A basic test example.
+    *
+    * @return void
+    */
+    protected function generateUsers($num = 1)
+    {
+        return factory(App\User::class, $num)->create();
     }
 }
